@@ -1,0 +1,46 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body > div {
+  height: 100%;
+}
+
+#sidebar {
+  width: 340px;
+  float: left;
+}
+
+#map-panel {
+}
+
+#toolbar {
+  padding: 4px 6px 0;
+}
+
+#toolbar img {
+  padding: 5px;
+}
+
+#geoloc {
+  opacity: 0.1;
+}
+
+.button {
+  cursor: pointer;
+}
+
+#selection-list {
+  padding: 5px;
+}
+
+#selection-list div {
+  font-family: "Arial", sans-serif;
+  font-weight: bold;
+}
+
+#selection-list div span {
+  cursor: pointer;
+}
