@@ -1,0 +1,26 @@
+{
+    "type": "Feature",
+    "properties": {
+        "type": "atm",
+        "name": "Bankomat Banku Linowego",
+        "desc": "Bankomat Banku Linowego",
+        "center": [
+            18.613629341125,
+            54.372258572616
+        ]
+    },
+    "id": "liniowy",
+    "geometry": {
+        "type": "LineString",
+        "coordinates": [
+            [
+                18.613339662552,
+                54.372083579944
+            ],
+            [
+                18.613843917847,
+                54.372458563328
+            ]
+        ]
+    }
+}

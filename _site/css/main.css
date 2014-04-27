@@ -28,15 +28,24 @@ html, body {
 }
 
 body {
-  overflow: hidden;
   font-family: "Titillium Web", "Arial", sans-serif;
   font-size: 120%;
   color: #003666;
 }
 
-body > div {
-  height: 100%;
+hr {
+  border-style: outset;
+  border-color: #A0F0FF #A0F0FF; 
+  background-color: #F0FFFF;
+  height: 4px;
+  margin: 0 10px;
 }
+
+/*
+#sidebar hr {
+  margin: 0;
+}
+*/
 
 #cover {
   position: fixed;
@@ -54,8 +63,18 @@ body > div {
               top 0.2s ease-out;
 }
 
-.button:hover, #logo img.button:hover {
+.button-down {
+  top: 5px;
+}
+
+.button:hover, #logo:hover {
   opacity: 1;
+}
+
+.dialog-close-button {
+  position: absolute;
+  margin: 10px 0 0 5px;
+  z-index: inherit;
 }
 
 .nav-separator {
@@ -73,37 +92,41 @@ body > div {
   color: #f00;
 }
 
-#logo {
+#sidebar-head {
   text-align: center;
+}
+
+#title {
+  margin-bottom: -4px;
   font-weight: 900;
   font-size: 200%;
 }
 
-#logo img.button {
-  width: 340px;
-  opacity: 0.8;
-  display: block;
-  margin: 0 auto;
-}
-
 #sidebar {
-  width: 340px;
-  float: left;
-  padding: 10px;
-  border-right: solid 2px #F0FFFF;
-}
-
-#map-canvas {
-  border-left: solid 1px #E0FFFF;
+  padding: 0 10px;
 }
 
 #toolbar {
+  cursor: default;
   height: 32px;
   padding: 5px 5px 7px;
   border: outset 1px;
   border-color: #A0F0FF #80D0E0;
   border-radius: 2px;
   background-color: #F0FFFF;
+}
+
+#feature-caption {
+  visibility: hidden;
+  z-index: 1;
+  position: absolute;
+  left: 86px;
+  padding: 0 10px 2px;
+  font-size: 150%;
+  border: outset 1px;
+  border-color: #A0F0FF #80D0E0;
+  border-radius: 2px;
+  background-color: rgba( 240, 255, 255, 0.9 );  
 }
 
 #selection-list {
@@ -115,18 +138,27 @@ body > div {
 
 #selection-list div span {
   cursor: pointer;
+  transition: color 0.2s ease-out;
+}
+
+#selection-list div span:hover {
+  color: #88B6E6;
 }
 
 .ui-dialog {
-  z-index: 0;
+  z-index: -1;
   position: relative;
   opacity: 0;
-  transition: opacity 0.2s ease-out;
+  transition: opacity 0.2s ease-out,
+              max-height 0.2s ease-out;
+}
+
+.ui-dialog-active {
+  z-index: 100;
+  opacity: 1;
 }
 
 .ui-dialog form {
-  position: absolute;
-  top: 5px;
   width: calc( 100% - 12px );
 }
 
@@ -134,6 +166,7 @@ body > div {
   margin: 0;
   padding: 0 4px;
   border: 0;
+  text-align: center;
 }
 
 form {
@@ -145,7 +178,7 @@ form {
   background-color: #F0FFFF;
 }
 
-form label input {
+form input {
   font-family: "Arial", sans-serif;
   font-weight: bold;
   font-size: 0.8em;
@@ -158,14 +191,17 @@ form label input {
   margin: 5px;
 }
 
-form label input:invalid {
-  /*background-color: #fdd; too gay */
-  background-color: #A0C6FF;
+form input:invalid {
+  background-color: #A0D6E6;
 }
 
-form label input:user-error {
+form input:user-error {
   transition: all 0.2s ease-out;
   transform: rotate(30deg);
+}
+
+form input[type="radio"] {
+  margin: 5px 5px 5px 15px;
 }
 
 form input[type="submit"] {
@@ -173,6 +209,7 @@ form input[type="submit"] {
   transition: all 0.2s ease-out;
   font-family: "Titillium Web", "Arial", sans-serif;
   font-size: 1em;
+  font-weight: normal;
   padding: 0 10px 4px;
   margin: 4px auto 2px;
   background-color: #205686;
@@ -199,4 +236,123 @@ form input[type="submit"]:active {
 
 .input-field input {
   width: calc( 100% - 16px );
+}
+
+.loc-button {
+  display: inline-block;
+  float: right;
+  width: 24px;
+  margin-top: -28px;
+}
+
+#add-feature-fieldset {
+  text-align: left;
+}
+
+.input-with-locate .input-field input {
+  width: calc( 100% - 42px );
+}
+
+.input-with-locate .input-caption {
+  text-align: center;
+}
+
+#map-wrapper {
+  height: 100%;
+}
+
+#map-canvas {
+  height: 100%;
+}
+
+#nav-scroll-to-top {
+  position: absolute;
+}
+
+@media (max-width: 719px) {
+  .ui-dialog {
+    max-height: 0;
+  }
+  
+  .ui-dialog-active {
+    max-height: 1000px;
+  }
+
+  #sidebar {
+    border-bottom: solid 2px #F0FFFF;  
+  }
+  
+  #title {
+    display: inline;  
+  }
+
+  #logo {
+    display: none;
+  }
+
+  #logo-small {
+    margin-bottom: -6px;
+    display: inline;
+  }
+
+  #toolbar {
+    margin-bottom: 10px;
+  }
+
+  #feature-caption {
+    top: 32px;
+  }
+
+  #nav-scroll-to-top {
+    visibility: visible;
+    z-index: 1;
+    margin-left: 60px;
+  }
+    
+  #map-wrapper {
+    position: relative;
+    border-top: solid 1px #C0E0E0;
+    width: 100%;
+  }
+}
+
+@media (min-width: 720px) {
+  .ui-dialog form {
+    position: absolute;
+    top: 5px;
+  }
+
+  #sidebar {
+    height: 100%;
+    width: 340px;
+    display: inline-block;
+    border-right: solid 2px #F0FFFF;
+  }
+  
+  #logo {
+    display: block;
+    opacity: 0.8;
+    margin: 0 auto;
+    width: 340px;
+  }
+  
+  #logo-small {
+    display: none;  
+  }
+    
+  #feature-caption {
+    top: 8px;
+  }
+
+  #nav-scroll-to-top {
+    visibility: hidden;
+  }
+
+  #map-wrapper {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    width: calc( 100% - 363px );
+    border-left: solid 1px #C0E0E0;
+  }
 }
