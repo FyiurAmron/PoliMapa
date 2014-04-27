@@ -1,0 +1,14 @@
+{
+    "type": "Feature",
+    "properties": {
+        "type": "atm",
+        "name": "Bankomat XYZ",
+        "desc": "Bankomat Niepami\u0119tnego Banku",
+        "center": [
+            18.617518544197,
+            54.371027358337
+        ]
+    },
+    "id": "atm1",
+    "geometry": null
+}

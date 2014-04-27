@@ -1,57 +1,4 @@
-{ "type": "FeatureCollection",
-  "features": [
 {
-    "type": "Feature",
-    "properties": {
-        "type": "atm",
-        "name": "Bankomat XYZ",
-        "desc": "Bankomat Niepami\u0119tnego Banku",
-        "center": [
-            18.617518544197,
-            54.371027358337
-        ]
-    },
-    "id": "atm1",
-    "geometry": null
-},{
-    "type": "Feature",
-    "properties": {
-        "type": "atm",
-        "name": "BZ WBK",
-        "desc": "Bankomat BZ WBK",
-        "center": [
-            18.619347810745,
-            54.371321103168
-        ]
-    },
-    "id": "bzwbk1",
-    "geometry": null
-},{
-    "type": "Feature",
-    "properties": {
-        "type": "atm",
-        "name": "Bankomat Banku Linowego",
-        "desc": "Bankomat Banku Linowego",
-        "center": [
-            18.613629341125,
-            54.372258572616
-        ]
-    },
-    "id": "liniowy",
-    "geometry": {
-        "type": "LineString",
-        "coordinates": [
-            [
-                18.613339662552,
-                54.372083579944
-            ],
-            [
-                18.613843917847,
-                54.372458563328
-            ]
-        ]
-    }
-},{
     "type": "Feature",
     "properties": {
         "type": "atm",
@@ -102,5 +49,4 @@
             ]
         ]
     }
-}  ]
 }

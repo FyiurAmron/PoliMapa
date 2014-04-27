@@ -1,0 +1,14 @@
+{
+    "type": "Feature",
+    "properties": {
+        "type": "atm",
+        "name": "BZ WBK",
+        "desc": "Bankomat BZ WBK",
+        "center": [
+            18.619347810745,
+            54.371321103168
+        ]
+    },
+    "id": "bzwbk1",
+    "geometry": null
+}
