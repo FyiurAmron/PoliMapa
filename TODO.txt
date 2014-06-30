@@ -1,0 +1,8 @@
+* wybór warstw z mo¿liwoœci¹ nak³adania warstw
+* warstwa "personalne" z mo¿liwoœci¹ dodawania obiektów bez weryfikacji
+* ³atwe zarz¹dzanie u¿ytkownikami i obiekatmi do dodania z poziomu GUI
+  adminsitracyjnego
+* wizualne tworzenie konturu nowych obiektów w trybie dodawania
+* info o obiekcie w dymku na zdarzenie onContextMenu() w menu bocznym
+* lepsze grafiki ikon
+ 

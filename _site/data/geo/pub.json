@@ -4,6 +4,19 @@
     "type": "Feature",
     "properties": {
         "type": "pub",
+        "name": "Autsajder",
+        "desc": "Piwo za grosze w godzinach pracy",
+        "center": [
+            18.610453605652,
+            54.368277304812
+        ]
+    },
+    "id": "autsajder",
+    "geometry": null
+},{
+    "type": "Feature",
+    "properties": {
+        "type": "pub",
         "name": "Pub Publiczny",
         "desc": "Pub Publiczny<br />godziny otwarcia: -1.30 - 25.00",
         "center": [
@@ -35,6 +48,77 @@
                 [
                     18.614273071289,
                     54.372296070949
+                ]
+            ]
+        ]
+    }
+},{
+    "type": "Feature",
+    "properties": {
+        "type": "pub",
+        "name": "Pub Punktowy 2",
+        "desc": "Pub Punktowy 2",
+        "center": [
+            18.616354465485,
+            54.373271015581
+        ]
+    },
+    "id": "punktowy2",
+    "geometry": null
+},{
+    "type": "Feature",
+    "properties": {
+        "type": "pub",
+        "name": "Pub Punktowy",
+        "desc": "Pub Punktowy",
+        "center": [
+            18.616890907288,
+            54.373083528026
+        ]
+    },
+    "id": "punktowy",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+                18.616923093796,
+                54.373064779224
+            ]
+    }
+},{
+    "type": "Feature",
+    "properties": {
+        "type": "pub",
+        "name": "Znak",
+        "desc": "Znak",
+        "center": [
+            18.620957136154,
+            54.372708550349
+        ]
+    },
+    "id": "znak",
+    "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+            [
+                [
+                    18.620903491974,
+                    54.372977284699
+                ],
+                [
+                    18.621300458908,
+                    54.372752297921
+                ],
+                [
+                    18.621042966843,
+                    54.372502311167
+                ],
+                [
+                    18.620517253876,
+                    54.372577307353
+                ],
+                [
+                    18.620903491974,
+                    54.372977284699
                 ]
             ]
         ]

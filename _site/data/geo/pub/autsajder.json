@@ -1,0 +1,14 @@
+{
+    "type": "Feature",
+    "properties": {
+        "type": "pub",
+        "name": "Autsajder",
+        "desc": "Piwo za grosze w godzinach pracy",
+        "center": [
+            18.610453605652,
+            54.368277304812
+        ]
+    },
+    "id": "autsajder",
+    "geometry": null
+}

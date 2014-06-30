@@ -1,0 +1,14 @@
+{
+    "type": "Feature",
+    "properties": {
+        "type": "pub",
+        "name": "Pub Punktowy 2",
+        "desc": "Pub Punktowy 2",
+        "center": [
+            18.616354465485,
+            54.373271015581
+        ]
+    },
+    "id": "punktowy2",
+    "geometry": null
+}

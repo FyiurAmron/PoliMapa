@@ -1,0 +1,14 @@
+{
+    "type": "Feature",
+    "properties": {
+        "type": "sci",
+        "name": "tess",
+        "desc": "tess",
+        "center": [
+            18.612502813339,
+            54.372214824518
+        ]
+    },
+    "id": "tess",
+    "geometry": null
+}
