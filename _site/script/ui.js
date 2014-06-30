@@ -9,10 +9,10 @@ function splitAfterLast( str, splitter ) {
   return str.substring( str.lastIndexOf( splitter ) + 1 );
 }
 
-function onClickID( id_name, func ) {
+function fireOnMousedown( id_name, func ) {
   var elem = document.getElementById( id_name );
   if ( elem )
-    elem.addEventListener( "click", func );
+    elem.addEventListener( "mousedown", func );
 }
 
 function toggleDisplay( id, display_type ) {
@@ -37,36 +37,27 @@ function hideDialogs() {
 }
 
 function switchDialog( id ) {
-  var elem = document.getElementById( id + "-box" );
+  var elem = document.getElementById( id + "-dialog" );
+  var fieldset = document.getElementById( id + "-fieldset" ); 
   if ( elem.classList.contains( "ui-dialog-active" ) ) {
     elem.classList.remove( "ui-dialog-active" );
-    document.getElementById( id + "-fieldset" ).disabled = "disabled";  
+    if ( fieldset )
+      fieldset.disabled = "disabled";  
   } else {
     hideDialogs();
     elem.classList.add( "ui-dialog-active" );
-    document.getElementById( id + "-fieldset" ).disabled = "";
+    if ( fieldset )
+      fieldset.disabled = "";
   }
 }
 
-function onClickDialog( name ) {
-  onClickID( "nav-" + name, function() {
+function navActionDialog( name ) {
+  fireOnMousedown( "nav-" + name, function() {
     switchDialog( name );
   } );
 }
 
-onClickDialog( "login" );
-onClickDialog( "new-user" );
-onClickDialog( "add-feature" );
-
-onClickID( "nav-logout", function() {
-  window.location.replace( "logout.php" );
-} );
-
-onClickID( "nav-scroll-to-top", function() {
-  document.body.scrollIntoView();
-} );
-
-function makeClickButton( butt ) {
+function makeButton( butt ) {
   butt.addEventListener( "mousedown", function() {
     this.classList.add( "button-down" );
   } );
@@ -75,10 +66,36 @@ function makeClickButton( butt ) {
   } );
 }
 
-var buttons = document.getElementsByClassName( "button" );
-for( var i = buttons.length - 1; i >= 0; i-- )
-  makeClickButton( buttons[i] );
+function makePushButton( butt ) {
+  butt.addEventListener( "click", function() {
+    this.classList.toggle( "button-down" );
+  } );
+}
 
-var close_buttons = document.getElementsByClassName( "dialog-close-button" );
-for( var i = close_buttons.length - 1; i >= 0; i-- )
-  close_buttons[i].onclick = hideDialogs;
+(function(){
+
+var navActionDialogs = [
+  "login", "new-user", "add-feature", "info", "help", "admin-panel"
+];
+
+for( var i = navActionDialogs.length - 1; i >= 0; i-- )
+  navActionDialog( navActionDialogs[i] );
+
+fireOnMousedown( "nav-logout", function() {
+  window.location.replace( "logout.php" );
+} );
+
+fireOnMousedown( "nav-scroll-to-top", function() {
+  document.body.scrollIntoView();
+} );
+
+var elems = document.getElementsByClassName( "button" );
+for( var i = elems.length - 1; i >= 0; i-- )
+  //makePushButton( elems[i] );
+  makeButton( elems[i] );
+
+elems = document.getElementsByClassName( "dialog-close-button" );
+for( var i = elems.length - 1; i >= 0; i-- )
+  elems[i].onclick = hideDialogs;
+  
+})();

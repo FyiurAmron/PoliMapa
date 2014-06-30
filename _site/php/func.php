@@ -1,5 +1,7 @@
 <?php
 
+include_once 'const.php';
+
 function is_request_GET() {
   return filter_input( INPUT_SERVER, 'REQUEST_METHOD' ) === 'GET';
 }

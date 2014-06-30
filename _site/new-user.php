@@ -1,5 +1,4 @@
 <?php
-include 'php/const.php';
 include 'php/func.php';
 
 safe_session_start();

@@ -1,7 +1,7 @@
 // Maps API implementation of a map logic & UI 
 "use strict";
 /* global google */
-/* global onClickID, makeClickButton */
+/* global fireOnMousedown, makeButton */
 /* global splitAfterLast, splitBeforeLast */
 /* jshint -W031 */ // since Google Maps API uses side effects for constructors
 
@@ -12,7 +12,9 @@ var PG_LatLng = new google.maps.LatLng( PG_lat, PG_lng );
 var poly_style_selected = { strokeWeight: 2, fillOpacity: 0.75 };
 var dotline_style_selected = { strokeWeight: 8 };
 var old_set_fn = google.maps.InfoWindow.prototype.set;
+var loc_enabled = false;
 var myMap;
+var markers = [];
 
 function getSelectedStyle( feature ) {
   var geom = feature.getGeometry();
@@ -32,11 +34,60 @@ function setPopupOnPOI( enable ) {
   }; 
 }
 
+function setMapCaption( caption ) {
+  var cap_elem = document.getElementById( "feature-caption" );
+  cap_elem.style.visibility = caption ? "visible" : "hidden";
+  cap_elem.innerHTML = caption;
+}
+
+function setMapDataStyle( data, tint ) {
+  data.setStyle( function( feature ) {
+    return feature.getProperty( "isHidden" ) ? {
+      fillOpacity: 0,
+      strokeOpacity: 0,
+    } : {
+      fillColor: tint,
+      strokeColor: tint,
+      strokeWeight: ( feature.getGeometry() && feature.getGeometry().getType() == "Polygon" ) ? 1 : 4
+    };
+  } );
+}
+
+function addMapDataListeners( data ) {
+  data.addListener( "rightclick", function( event ) {
+    var coords = event.feature.getProperty( "center" );
+    myMap.setCenter( new google.maps.LatLng( coords[1], coords[0] ) );
+  } );
+  
+  data.addListener( "click", function( event ) {
+    var iw = event.feature.getProperty( "iw" );
+    iw.open( myMap );
+    iw.setPosition( event.latLng );
+  } );
+
+  data.addListener( "mouseover", function( event ) {
+    setSelectedStyle( data, event.feature );
+    setMapCaption( event.feature.getProperty( "name" ) );   
+  } );
+
+  data.addListener( "mouseout", function( event ) {
+    data.revertStyle();
+    setMapCaption();
+  } );
+}
+
 function load_dataset( set_name, tint ) {
   if ( myMap ) {
+    for( var i = markers.length - 1; i >= 0; i-- )
+      markers[i].setMap( null );
+    markers.length = 0;
+    myMap.data.forEach( function( feature ) {
+      var iw = feature.getProperty( "iw" );
+      if ( iw )
+        iw.close();
+    } );
+      
     var new_data = new google.maps.Data( { map: myMap } ); 
-    setMapDataStyle( new_data, tint );
-    addMapDataListeners( new_data );
     var hReq = new XMLHttpRequest();
     hReq.onload = function() {
       new_data.addGeoJson( JSON.parse( hReq.response ) );
@@ -50,17 +101,24 @@ function load_dataset( set_name, tint ) {
         feature_span.innerHTML = feature_name;
         var coords = feature.getProperty( "center" );
         var center_latlng = new google.maps.LatLng( coords[1], coords[0] );
+        var event_receiver;
         feature_span.addEventListener( "click", function() {
           myMap.setCenter( center_latlng );
           document.getElementById( "map-wrapper" ).scrollIntoView();
         } );
+        var iw = new google.maps.InfoWindow( {
+          content: feature.getProperty( "desc" ) 
+        } );
         if ( feature.getGeometry() ) {
-          feature_span.addEventListener( "mouseover", function() {
-            setSelectedStyle( new_data, feature );
-          } );
-          feature_span.addEventListener( "mouseout", function() {
-            new_data.revertStyle();
-          } );
+          if ( !feature.getProperty( "deco" ) ) {
+            feature_span.addEventListener( "mouseover", function() {
+              setSelectedStyle( new_data, feature );
+            } );
+            feature_span.addEventListener( "mouseout", function() {
+              new_data.revertStyle();
+            } );
+          }
+          feature.setProperty( "iw", iw );
         } else {
           var marker = new google.maps.Marker( {
             position: center_latlng,
@@ -69,62 +127,48 @@ function load_dataset( set_name, tint ) {
             icon: "img/nav-" + set_name + "-small.png",
             opacity: 0.5
           } );
+          var highlight = function() {
+            marker.setOpacity( 1 );          
+          };
+          var dim = function() {
+            marker.setOpacity( 0.5 );
+          };
           marker.addListener( "click", function( event ) {
+            iw.open( myMap, marker );
+          } );
+          marker.addListener( "rightclick", function( event ) {
             var coords = feature.getProperty( "center" );
             myMap.setCenter( new google.maps.LatLng( coords[1], coords[0] ) );
           } );
-          feature_span.addEventListener( "mouseover", function() {
-            marker.setOpacity( 1 );
+          marker.addListener( "mouseover", function() {
+            setMapCaption( feature.getProperty( "name" ) );    
+            highlight(); 
           } );
-          feature_span.addEventListener( "mouseout", function() {
-            marker.setOpacity( 0.5 );
-          } );          
-        } 
-        var feature_div = document.createElement( "div" );
-        feature_div.appendChild( feature_span );
-        feature_displ_list.appendChild( feature_div );
+          marker.addListener( "mouseout", function() {
+            setMapCaption();
+            dim();
+          } );
+          if ( !feature.getProperty( "deco" ) ) {
+            feature_span.addEventListener( "mouseover", highlight );
+            feature_span.addEventListener( "mouseout", dim );
+          }
+          markers.push( marker );
+        }
+        if ( !feature.getProperty( "deco" ) ) { 
+          var feature_div = document.createElement( "div" );
+            feature_div.appendChild( feature_span );
+            feature_displ_list.appendChild( feature_div );
+        }
       } );
+        
       myMap.data.setMap( null );
       myMap.data = new_data;
     };
+    setMapDataStyle( new_data, tint );
+    addMapDataListeners( new_data );
     hReq.open( "GET", "data/geo/" + set_name + ".json" );
     hReq.send();
   }  
-}
-
-function setMapDataStyle( data, tint ) {
-  data.setStyle( function( feature ) {
-    return feature.getProperty( "isHidden" ) ? {
-               fillOpacity: 0,
-               strokeOpacity: 0,
-             }
-           : {
-               fillColor: tint,
-               strokeColor: tint,
-               strokeWeight: ( feature.getGeometry() && feature.getGeometry().getType() == "Polygon" ) ? 1 : 4
-             };
-  } );
-}
-
-function addMapDataListeners( data ) {
-  data.addListener( "click", function( event ) {
-    var coords = event.feature.getProperty( "center" );
-    myMap.setCenter( new google.maps.LatLng( coords[1], coords[0] ) );
-  } );
-
-  data.addListener( "mouseover", function( event ) {
-    setSelectedStyle( data, event.feature );
-    var caption = document.getElementById( "feature-caption" );
-    caption.style.visibility = "visible";    
-    caption.innerHTML = event.feature.getProperty( "name" );
-  } );
-
-  data.addListener( "mouseout", function( event ) {
-    data.revertStyle();
-    var caption = document.getElementById( "feature-caption" );
-    caption.style.visibility = "hidden";
-    caption.innerHTML = "";
-  } );
 }
 
 function initialize_maps() {
@@ -153,6 +197,9 @@ function initialize_maps() {
     }
   };
   myMap = new google.maps.Map( document.getElementById( "map-canvas" ), mapOptions );
+  myMap.addListener( "rightclick", function( event ) {
+    myMap.setCenter( event.latLng );
+  } );
   myMap.mapTypes.set( "noPOI_style", noPOI_style );
   //myMap.setMapTypeId( "noPOI_style" );
 }
@@ -186,28 +233,23 @@ function centerOnPG() {
     myMap.setCenter( PG_LatLng );
 }
 
-onClickID( "logo", centerOnPG );
-onClickID( "logo-small", centerOnPG );
-
 function coordsToId( id, lat, lng ) {
   document.getElementById(id).value = lng + ", " + lat;
 }
 
-var loc_enabled = false;
-
 function enableLocateButton( name ) {
-  onClickID( "loc-" + name, function() {
+  fireOnMousedown( "loc-" + name, function() {
     if ( loc_enabled )
       return false;
     loc_enabled = true;
     myMap.setOptions({draggableCursor: "crosshair"});
     google.maps.event.addListenerOnce( myMap, "click", function( event ) {
-      coordsToId( "input-" + name, event.latLng.lat(), event.latLng.lng() );
       myMap.setOptions( {
         draggableCursor: "default",
       } );
       loc_enabled = false;
-      
+      coordsToId( "input-" + name, event.latLng.lat(), event.latLng.lng() );
+            
       var number = parseInt( splitAfterLast( name, '-') );
       if ( isNaN(number) )
         return;
@@ -223,11 +265,12 @@ function enableLocateButton( name ) {
       new_button.id = "loc-" + new_name;
       new_button.alt = "locate " + new_name;
       new_button.title = new_button.alt;
-      makeClickButton( new_button );
+      makeButton( new_button );
       
       var new_input = document.getElementById("input-" + name).cloneNode();
       new_input.id = "input-" + new_name;
       new_input.name = new_name;
+      new_input.value = "";
 
       var my_parent = old_button.parentNode;
       var my_input_div = document.createElement("div");
@@ -237,22 +280,29 @@ function enableLocateButton( name ) {
       my_parent.appendChild( new_button );
       enableLocateButton( new_name );
     } );
-    google.maps.event.trigger( myMap, "resize" );
+    //google.maps.event.trigger( myMap, "resize" );
   } );
 }
 
-enableLocateButton( "feature-center" );
-enableLocateButton( "feature-vertex-0" );
-
-function onClickDataset( name, tint ) {
-  onClickID( "nav-" + name, function() {
+function onMousedownDataset( name, tint ) {
+  fireOnMousedown( "nav-" + name, function() {
     load_dataset( name, tint );
   } );
 }
 
-onClickDataset( "sci", "black" );
-onClickDataset( "atm", "green" );
-onClickDataset( "food", "red" );
-onClickDataset( "pub", "orange" );
+(function(){
+
+fireOnMousedown( "logo", centerOnPG );
+fireOnMousedown( "logo-small", centerOnPG );
+
+enableLocateButton( "feature-center" );
+enableLocateButton( "feature-vertex-0" );
+
+onMousedownDataset( "sci", "black" );
+onMousedownDataset( "atm", "green" );
+onMousedownDataset( "food", "red" );
+onMousedownDataset( "pub", "orange" );
 
 google.maps.event.addDomListener( window, "load", initialize_maps );
+
+})();

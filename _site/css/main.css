@@ -41,6 +41,10 @@ hr {
   margin: 0 10px;
 }
 
+ul {
+  padding-left: 24px;
+}
+
 /*
 #sidebar hr {
   margin: 0;
@@ -53,6 +57,13 @@ hr {
   width: 100%;
   z-index: -1;
 }
+
+/*
+button.nav-button {
+  background-color: #fff;
+  border: 0;
+}
+*/
 
 .button {
   cursor: pointer;
@@ -97,9 +108,7 @@ hr {
 }
 
 #title {
-  margin-bottom: -4px;
-  font-weight: 900;
-  font-size: 200%;
+  margin: 0 0 -4px;
 }
 
 #sidebar {
@@ -158,24 +167,39 @@ hr {
   opacity: 1;
 }
 
-.ui-dialog form {
+.ui-dialog-content {
+  width: 100%;
+}
+
+.ui-dialog-content form, .ui-dialog-box {
   width: calc( 100% - 12px );
 }
 
-.ui-dialog fieldset {
+.ui-dialog-content fieldset {
   margin: 0;
   padding: 0 4px;
   border: 0;
   text-align: center;
 }
 
-form {
+.ui-dialog-content h2 {
+  text-align: center;
+  margin: 2px auto 4px;
+  line-height: 1em;
+/*  text-indent: 0; */
+}
+
+form, .ui-dialog-box {
   display: inline-block;
   padding: 5px;
   border: outset 1px;
   border-color: #A0F0FF #80D0E0;
   border-radius: 2px;
   background-color: #F0FFFF;
+}
+
+.ui-dialog-box {
+/*  text-indent: 40px; */
 }
 
 form input {
@@ -197,7 +221,7 @@ form input:invalid {
 
 form input:user-error {
   transition: all 0.2s ease-out;
-  transform: rotate(30deg);
+  transform: rotate(30deg); /* for lulz when it starts working ^_~ */
 }
 
 form input[type="radio"] {
@@ -238,6 +262,10 @@ form input[type="submit"]:active {
   width: calc( 100% - 16px );
 }
 
+.input-field input[type="checkbox"] {
+  width: auto;
+}
+
 .loc-button {
   display: inline-block;
   float: right;
@@ -269,6 +297,30 @@ form input[type="submit"]:active {
   position: absolute;
 }
 
+.result-window {
+  color: #F0FFFF;
+  background-color: #F8FFFF;
+}
+
+#title-icons {
+  position: absolute;
+  top: 12px;
+}
+
+#title-icons #nav-info {
+  float: left;
+}
+
+#title-icons #nav-help {
+  float: right;
+}
+
+@media (max-width: 379px) {
+  #title-icons {
+    display: none;
+  }  
+}
+
 @media (max-width: 719px) {
   .ui-dialog {
     max-height: 0;
@@ -286,6 +338,10 @@ form input[type="submit"]:active {
     display: inline;  
   }
 
+  #title-icons {
+    width: calc( 100% - 20px );
+  }
+  
   #logo {
     display: none;
   }
@@ -317,7 +373,7 @@ form input[type="submit"]:active {
 }
 
 @media (min-width: 720px) {
-  .ui-dialog form {
+  .ui-dialog-content {
     position: absolute;
     top: 5px;
   }
@@ -328,7 +384,11 @@ form input[type="submit"]:active {
     display: inline-block;
     border-right: solid 2px #F0FFFF;
   }
-  
+
+  #title-icons {
+    width: 330px;
+  }
+    
   #logo {
     display: block;
     opacity: 0.8;
